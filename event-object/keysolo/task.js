@@ -18,7 +18,10 @@ class Game {
 
   registerEvents() {
     document.addEventListener('keydown', (event) => {
-      if (event.key.toLowerCase() === this.currentSymbol.textContent.toLowerCase()) {
+      if (
+        event.key.toLowerCase() ===
+        this.currentSymbol.textContent.toLowerCase()
+      ) {
         this.success();
         return;
       }
@@ -28,7 +31,10 @@ class Game {
   }
 
   success() {
-    if (this.currentSymbol.classList.contains("symbol_current")) this.currentSymbol.classList.remove("symbol_current");
+    if (this.currentSymbol.classList.contains('symbol_current')) {
+      this.currentSymbol.classList.remove('symbol_current');
+    }
+
     this.currentSymbol.classList.add('symbol_correct');
     this.currentSymbol = this.currentSymbol.nextElementSibling;
 
@@ -37,24 +43,29 @@ class Game {
       return;
     }
 
-    if (++this.winsElement.textContent === 10) {
+    if (this.wordElement.classList.contains('word_incorrect')) {
+      if (++this.lossElement.textContent === 3) {
+        alert('Вы проиграли!');
+        this.reset();
+        return;
+      }
+    } else if (++this.winsElement.textContent === 10) {
       alert('Победа!');
       this.reset();
+      return;
     }
+
     this.setNewWord();
   }
 
   fail() {
-    if (++this.lossElement.textContent === 3) {
-      alert('Вы проиграли!');
-      this.reset();
-    }
-    this.setNewWord();
+    this.wordElement.classList.add('word_incorrect');
   }
 
   setNewWord() {
     const word = this.getWord();
 
+    this.wordElement.classList.remove('word_incorrect');
     this.renderWord(word);
   }
 
@@ -81,13 +92,13 @@ class Game {
     const html = [...word]
       .map(
         (s, i) =>
-          `<span class="symbol ${i === 0 ? 'symbol_current': ''}">${s}</span>`
+          `<span class="symbol ${i === 0 ? 'symbol_current' : ''}">${s}</span>`
       )
       .join('');
-    this.wordElement.innerHTML = html;
 
+    this.wordElement.innerHTML = html;
     this.currentSymbol = this.wordElement.querySelector('.symbol_current');
   }
 }
 
-new Game(document.getElementById('game'))
+new Game(document.getElementById('game'));
